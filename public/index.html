@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QAP 3</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        input, button {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>QAP3 Operations</h1>
+
+    <h2>Create Data</h2>
+    <form id="createForm">
+        <input type="text" id="createName" placeholder="Name" required>
+        <input type="email" id="createEmail" placeholder="Email" required>
+        <button type="submit">Create</button>
+    </form>
+
+    <h2>Update Data</h2>
+    <form id="updateForm">
+        <input type="number" id="updateId" placeholder="ID" required>
+        <input type="text" id="updateName" placeholder="Name" required>
+        <input type="email" id="updateEmail" placeholder="Email" required>
+        <button type="submit">Update</button>
+    </form>
+
+    <h2>Delete Data</h2>
+    <form id="deleteForm">
+        <input type="number" id="deleteId" placeholder="ID" required>
+        <button type="submit">Delete</button>
+    </form>
+
+    <h2>Get All Data</h2>
+    <button id="getAllButton">Get All Data</button>
+    <pre id="result"></pre>
+
+    <script>
+        document.getElementById('createForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const name = document.getElementById('createName').value;
+            const email = document.getElementById('createEmail').value;
+            try {
+                const response = await fetch('/api/data', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email })
+                });
+                const data = await response.json();
+                alert('Data created: ' + JSON.stringify(data));
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+
+        document.getElementById('updateForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const id = document.getElementById('updateId').value;
+            const name = document.getElementById('updateName').value;
+            const email = document.getElementById('updateEmail').value;
+            try {
+                const response = await fetch(`/api/data/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email })
+                });
+                const data = await response.json();
+                alert('Data updated: ' + JSON.stringify(data));
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+
+        document.getElementById('deleteForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const id = document.getElementById('deleteId').value;
+            try {
+                await fetch(`/api/data/${id}`, {
+                    method: 'DELETE'
+                });
+                alert('Data deleted');
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+
+        document.getElementById('getAllButton').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/data');
+                const data = await response.json();
+                document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    </script>
+</body>
+</html>
