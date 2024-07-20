@@ -7,7 +7,7 @@ const pool = require('../models/data');
 //Mock database setup
 beforeAll(async () => {
     await pool.query(`
-        CREATE TABLE IF NOT EXISTS your_table_name (
+        CREATE TABLE IF NOT EXISTS user_emails (
             id SERIAL PRIMARY KEY,
             name VARCHAR(100),
             email VARCHAR(100)
@@ -16,7 +16,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-    await pool.query('DROP TABLE IF EXISTS your_table_name');
+    await pool.query('DROP TABLE IF EXISTS user_emails');
     await pool.end();
 });
 
